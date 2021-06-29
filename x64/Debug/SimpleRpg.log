@@ -1,0 +1,46 @@
+﻿  engine.cpp
+E:\C C++\SimpleRpg\engine.cpp(5,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(18,52): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(18,38): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(70,9): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(70,49): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(71,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(72,22): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(185,44): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(236,13): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(237,14): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(262,13): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(263,14): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+  SimpleRpg.vcxproj -> E:\C C++\SimpleRpg\x64\Debug\SimpleRpg.exe

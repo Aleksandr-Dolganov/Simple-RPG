@@ -1,0 +1,44 @@
+#pragma once
+#include <SFML\Graphics.hpp>
+#include <ctime>
+#include "character.h"
+#include "map.h"
+#include "view.h"
+#include "enemy.h"
+using namespace sf;
+
+class Engine
+{
+private:
+	RenderWindow m_Window;// Окно
+
+	float CurrentWframe;// Текущий кадр анимации воды
+
+	float zoomSpeed;// Скорость зума
+
+	Sprite m_map;// Спрайт карты
+	Sprite m_mapW;// Спрайт воды (с анимацией)
+	Texture m_mapTexture;// Текстуры карты
+	Texture m_mapWTexture;// Текстуры воды (с анимацией)
+
+	Character m_Character;// Экземпляр персонажа
+
+	Enemy e_Enemy;
+
+	void input();// Функция отслеживания нажатия клавиш управления
+
+	void update(float);// Функция для обновления персонажа
+
+	void drawMap(float);// Функция отрисовки карты (из файла view.h)
+	void randomMap();// Функция рандомизации карты
+
+	void collisionX();// Коллизия по координате X
+	void collisionY();// Коллизия по координате Y\
+
+	void battle();
+	int ready;
+public:
+	Engine();// Конструктор
+
+	void start();// Функция запуска игры
+};

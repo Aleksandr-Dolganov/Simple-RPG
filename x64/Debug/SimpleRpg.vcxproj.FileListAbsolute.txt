@@ -1,0 +1,2 @@
+E:\C C++\SimpleRpg\x64\Debug\SimpleRpg.exe
+E:\C C++\SimpleRpg\x64\Debug\SimpleRpg.pdb

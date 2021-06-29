@@ -1,0 +1,5 @@
+﻿  main.cpp
+main.obj : error LNK2005: "class sf::String (* TileMap)[30]" (?TileMap@@3PAY0BO@VString@sf@@A) уже определен в engine.obj
+main.obj : error LNK2005: "class sf::View Cam" (?Cam@@3VView@sf@@A) уже определен в engine.obj
+main.obj : error LNK2005: "void __cdecl moveCam(float,float)" (?moveCam@@YAXMM@Z) уже определен в engine.obj
+E:\C C++\SimpleRpg\x64\Release\SimpleRpg.exe : fatal error LNK1169: обнаружен многократно определенный символ - один или более
