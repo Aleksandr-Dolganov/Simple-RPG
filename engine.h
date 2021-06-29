@@ -2,9 +2,9 @@
 #include <SFML\Graphics.hpp>
 #include <ctime>
 #include "character.h"
-#include "map.h"
 #include "view.h"
 #include "enemy.h"
+#include "map.h"
 using namespace sf;
 
 class Engine
@@ -25,15 +25,12 @@ private:
 
 	Enemy e_Enemy;
 
-	void input();// Функция отслеживания нажатия клавиш управления
+	void input(float);// Функция отслеживания нажатия клавиш управления
 
 	void update(float);// Функция для обновления персонажа
 
 	void drawMap(float);// Функция отрисовки карты (из файла view.h)
 	void randomMap();// Функция рандомизации карты
-
-	void collisionX();// Коллизия по координате X
-	void collisionY();// Коллизия по координате Y\
 
 	void battle();
 	int ready;

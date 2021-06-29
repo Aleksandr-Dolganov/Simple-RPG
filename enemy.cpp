@@ -1,7 +1,5 @@
 #pragma once
 #include "enemy.h"
-#include <ctime>
-#include "map.h"
 
 Enemy::Enemy() {
 	srand(time(0));

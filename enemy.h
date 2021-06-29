@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include <ctime>
+#include "map.h"
 using namespace sf;
 
 class Enemy

@@ -1,12 +1,11 @@
 #pragma once
 #include "character.h"
-#include "map.h"
 
 Character::Character()
 {
 	Currentframe = 0;
 	Health = 20;
-	m_Speed = 0.2;
+	m_Speed = 0;
 	// Задаем текстуры для спрайта персонажа
 	m_Texture.loadFromFile("Textures/Character/male-1.png");
 	m_Sprite.setTexture(m_Texture);
@@ -14,11 +13,7 @@ Character::Character()
 	m_Sprite.setTextureRect(IntRect(32, 0, 32, 32));
 	// Начальные координаты персонажа
 	m_Position = Vector2f(0, 0);
-
-	m_DownPressed = false;
-	m_UpPressed = false;
-	m_RightPressed = false;
-	m_LeftPressed = false;
+	dir = dx = dy = 0;
 }
 
 Sprite Character::getSprite()
@@ -27,44 +22,6 @@ Sprite Character::getSprite()
 }
 Vector2f Character::getPos() {
 	return m_Position;
-}
-
-void Character::moveLeft()
-{
-	m_LeftPressed = true;
-}
-void Character::moveRight()
-{
-	m_RightPressed = true;
-}
-void Character::moveUp()
-{
-	m_UpPressed = true;
-}
-void Character::moveDown()
-{
-	m_DownPressed = true;
-}
-
-void Character::stopLeft()
-{
-	m_LeftPressed = false;
-	m_Sprite.setTextureRect(IntRect(32, 32, 32, 32));
-}
-void Character::stopRight()
-{
-	m_RightPressed = false;
-	m_Sprite.setTextureRect(IntRect(32, 64, 32, 32));
-}
-void Character::stopDown()
-{
-	m_DownPressed = false;
-	m_Sprite.setTextureRect(IntRect(32, 0, 32, 32));
-}
-void Character::stopUp()
-{
-	m_UpPressed = false;
-	m_Sprite.setTextureRect(IntRect(32, 96, 32, 32));
 }
 
 void Character::setX(float x) {
@@ -77,48 +34,21 @@ void Character::setSpeed(float speed) {
 	m_Speed = speed;
 }
 
-int Character::dx() {
-	if (m_RightPressed) return 1;
-	else if (m_LeftPressed) return -1;
-	else return 0;
-}
-int Character::dy() {
-	if (m_UpPressed) return 1;
-	else if (m_DownPressed) return -1;
-	else return 0;
-}
 void Character::updateCh(float elapsedTime)
 {
-	if (m_RightPressed)
+	switch (dir)
 	{
-		Currentframe += 0.005 * elapsedTime;
-		if (Currentframe > 3) Currentframe -= 3;
-		m_Sprite.setTextureRect(IntRect(32 * int(Currentframe), 64, 32, 32));
-		m_Position.x += m_Speed * elapsedTime;
-	}
-	else if (m_LeftPressed)
-	{
-		Currentframe += 0.005 * elapsedTime;
-		if (Currentframe > 3) Currentframe -= 3;
-		m_Sprite.setTextureRect(IntRect(32 * int(Currentframe), 32, 32, 32));
-		m_Position.x -= m_Speed * elapsedTime;
-	}
-	else if (m_UpPressed)
-	{
-		Currentframe += 0.005 * elapsedTime;
-		if (Currentframe > 3) Currentframe -= 3;
-		m_Sprite.setTextureRect(IntRect(32 * int(Currentframe), 96, 32, 32));
-		m_Position.y -= m_Speed * elapsedTime;
-	}
-	else if (m_DownPressed)
-	{
-		Currentframe += 0.005 * elapsedTime;
-		if (Currentframe > 3) Currentframe -= 3;
-		m_Sprite.setTextureRect(IntRect(32 * int(Currentframe), 0, 32, 32));
-		m_Position.y += m_Speed * elapsedTime;
+	case 0: dx = m_Speed; dy = 0; break;
+	case 1: dx = -m_Speed; dy = 0; break;
+	case 2: dx = 0; dy = m_Speed; break;
+	case 3: dx = 0; dy = -m_Speed; break;
 	}
 
+	m_Position.x += dx * elapsedTime;
+	m_Position.y += dy * elapsedTime;
+	m_Speed = 0;
 	m_Sprite.setPosition(m_Position);
+	collision();
 }
 
 void Character::randPos() {
@@ -133,4 +63,38 @@ void Character::randPos() {
 		y = (rand() % 30);
 	}
 	m_Position = Vector2f(x * 64, y * 64);
+}
+
+void Character::collision() {
+	for (int i = m_Position.y / 64; i < (m_Position.y + 64) / 64; i++) {
+		for (int j = m_Position.x / 64; j < (m_Position.x + 64) / 64; j++)
+		{
+			if (i > 0 and j > 0 and i < 30 and j < 30) {
+				if (TileMap[0][i][j] == 'w'
+					or TileMap[1][i][j] == 'C'
+					or TileMap[1][i][j] == 't'
+					or TileMap[1][i][j] == 'l'
+					or TileMap[1][i][j] == 'L'
+					or TileMap[1][i][j] == 'b')
+				{
+					if (dy > 0)
+					{
+						m_Position.y = i * 64 - 64;
+					}
+					if (dy < 0)
+					{
+						m_Position.y = i * 64 + 64;
+					}
+					if (dx > 0)
+					{
+						m_Position.x = j * 64 - 64;
+					}
+					if (dx < 0)
+					{
+						m_Position.x = j * 64 + 64;
+					}
+				}
+			}
+		}
+	}
 }

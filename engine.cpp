@@ -1,3 +1,4 @@
+#pragma once
 #include "engine.h"
 
 Engine::Engine()
@@ -51,14 +52,14 @@ void Engine::start()
 		}
 		else cooldown.restart();
 
-		input();
+		input(time);
 		update(time);
 		battle();
 		drawMap(time);
 	}
 	m_Window.close();
 }
-void Engine::input()
+void Engine::input(float elapsedTime)
 {
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
 	{
@@ -71,65 +72,93 @@ void Engine::input()
 		m_Character.setX(x * 64);
 		m_Character.setY(y * 64);
 	}
-
+	
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
 		if (m_Character.getPos().x > 0) {
-			m_Character.moveLeft();
+			m_Character.dir = 1;
+			if (Keyboard::isKeyPressed(Keyboard::LShift)) {
+				m_Character.setSpeed((float)0.4);
+				zoomSpeed = 5;
+			}
+			else {
+				m_Character.setSpeed((float)0.2);
+				zoomSpeed = 1;
+			}
+			m_Character.Currentframe += 0.005 * elapsedTime;
+			if (m_Character.Currentframe > 3) m_Character.Currentframe -= 3;
+			m_Character.m_Sprite.setTextureRect(IntRect(32 * int(m_Character.Currentframe), 32, 32, 32));
 			moveCam(m_Character.getPos().x, m_Character.getPos().y);
 		}
-		else {
-			m_Character.stopLeft();
-		}
 	}
-	else
-	{
-		m_Character.stopLeft();
+	else if (m_Character.dx < 0) {
+		m_Character.m_Sprite.setTextureRect(IntRect(32, 32, 32, 32));
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::D))
 	{
 		if (m_Character.getPos().x < 1920 - 64) {
-			m_Character.moveRight();
+			m_Character.dir = 0;
+			if (Keyboard::isKeyPressed(Keyboard::LShift)) {
+				m_Character.setSpeed((float)0.4);
+				zoomSpeed = 5;
+			}
+			else {
+				m_Character.setSpeed((float)0.2);
+				zoomSpeed = 1;
+			}
+			m_Character.Currentframe += 0.005 * elapsedTime;
+			if (m_Character.Currentframe > 3) m_Character.Currentframe -= 3;
+			m_Character.m_Sprite.setTextureRect(IntRect(32 * int(m_Character.Currentframe), 64, 32, 32));
 			moveCam(m_Character.getPos().x, m_Character.getPos().y);
 		}
-		else {
-			m_Character.stopRight();
-		}
 	}
-	else
-	{
-		m_Character.stopRight();
+	else if (m_Character.dx > 0) {
+		m_Character.m_Sprite.setTextureRect(IntRect(32, 64, 32, 32));
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::W))
 	{
 		if (m_Character.getPos().y > 0) {
-			m_Character.moveUp();
+			m_Character.dir = 3;
+			if (Keyboard::isKeyPressed(Keyboard::LShift)) {
+				m_Character.setSpeed((float)0.4);
+				zoomSpeed = 5;
+			}
+			else {
+				m_Character.setSpeed((float)0.2);
+				zoomSpeed = 1;
+			}
+			m_Character.Currentframe += 0.005 * elapsedTime;
+			if (m_Character.Currentframe > 3) m_Character.Currentframe -= 3;
+			m_Character.m_Sprite.setTextureRect(IntRect(32 * int(m_Character.Currentframe), 96, 32, 32));
 			moveCam(m_Character.getPos().x, m_Character.getPos().y);
 		}
-		else {
-			m_Character.stopUp();
-		}
 	}
-	else
-	{
-		m_Character.stopUp();
+	else if (m_Character.dy < 0) {
+		m_Character.m_Sprite.setTextureRect(IntRect(32, 96, 32, 32));
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::S))
 	{
 		if (m_Character.getPos().y < 1920 - 64) {
-			m_Character.moveDown();
+			m_Character.dir = 2;
+			if (Keyboard::isKeyPressed(Keyboard::LShift)) {
+				m_Character.setSpeed((float)0.4);
+				zoomSpeed = 5;
+			}
+			else {
+				m_Character.setSpeed((float)0.2);
+				zoomSpeed = 1;
+			}
+			m_Character.Currentframe += 0.005 * elapsedTime;
+			if (m_Character.Currentframe > 3) m_Character.Currentframe -= 3;
+			m_Character.m_Sprite.setTextureRect(IntRect(32 * int(m_Character.Currentframe), 0, 32, 32));
 			moveCam(m_Character.getPos().x, m_Character.getPos().y);
 		}
-		else {
-			m_Character.stopDown();
-		}
 	}
-	else
-	{
-		m_Character.stopDown();
+	else if (m_Character.dy > 0) { 
+		m_Character.m_Sprite.setTextureRect(IntRect(32, 0, 32, 32)); 
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::F2)) {
@@ -151,15 +180,6 @@ void Engine::input()
 	if (Keyboard::isKeyPressed(Keyboard::Enter))
 	{
 		Cam.setSize(512, 512);
-	}
-
-	if (Keyboard::isKeyPressed(Keyboard::LShift)) {
-		m_Character.setSpeed((float)0.4);
-		zoomSpeed = 5;
-	}
-	else {
-		m_Character.setSpeed((float)0.2);
-		zoomSpeed = 1;
 	}
 }
 void Engine::update(float dtAsSeconds)
@@ -226,63 +246,7 @@ void Engine::drawMap(float elapsedTime)
 	m_Window.draw(m_Character.getSprite());
 	m_Window.setView(Cam);
 
-	collisionX();
-	collisionY();
-
 	m_Window.display();
-}
-
-void Engine::collisionX() {
-	for (int i = (m_Character.getPos().y) / 64; i < (m_Character.getPos().y + 64) / 64; i++) {
-		for (int j = (m_Character.getPos().x) / 64; j < (m_Character.getPos().x + 64) / 64; j++) {
-			if (i < 30 and j < 30 and i > 0 and j > 0) {
-				if (TileMap[1][i][j] == 'b'
-					or TileMap[1][i][j] == 'C'
-					or TileMap[1][i][j] == 't'
-					or TileMap[1][i][j] == 'l'
-					or TileMap[1][i][j] == 'L'
-					or TileMap[0][i][j] == 'w') {
-					if (m_Character.dx() > 0)
-					{
-						m_Character.setX((float)j * 64 - 64);
-						//m_Character.setX(m_Character.getPos().x - 2);
-					}
-
-					if (m_Character.dx() < 0)
-					{
-						m_Character.setX((float)j * 64 + 64);
-						//m_Character.setX(m_Character.getPos().x + 2);
-					}
-				}
-			}
-		}
-	}
-}
-void Engine::collisionY() {
-	for (int i = (m_Character.getPos().y) / 64; i < (m_Character.getPos().y + 64) / 64; i++) {
-		for (int j = (m_Character.getPos().x) / 64; j < (m_Character.getPos().x + 64) / 64; j++) {
-			if (i < 30 and j < 30 and i > 0 and j > 0) {
-				if (TileMap[1][i][j] == 'b'
-					or TileMap[1][i][j] == 'C'
-					or TileMap[1][i][j] == 't'
-					or TileMap[1][i][j] == 'l'
-					or TileMap[1][i][j] == 'L'
-					or TileMap[0][i][j] == 'w') {
-					if (m_Character.dy() > 0)
-					{
-						m_Character.setY((float)i * 64 + 64);
-						//m_Character.setY(m_Character.getPos().y + 2);
-					}
-
-					if (m_Character.dy() < 0)
-					{
-						m_Character.setY((float)i * 64 - 64);
-						//m_Character.setY(m_Character.getPos().y - 2);
-					}
-				}
-			}
-		}
-	}
 }
 
 void Engine::randomMap() {
@@ -304,8 +268,6 @@ void Engine::randomMap() {
 	for (int i = 1; i < HEIGHT_MAP - 1; i++) {
 		for (int j = 1; j < WIDTH_MAP - 1; j++) {
 			tmp = rand() % 100;
-			if (tmp > 0 and tmp <= 65
-				and TileMap[1][i][j] == ' ') TileMap[1][i][j] = ' ';// это фактически ничего не делает
 			if (tmp > 65 and tmp <= 70
 				and TileMap[1][i][j] == ' '
 				and TileMap[0][i][j] != 'w'
