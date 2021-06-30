@@ -72,6 +72,13 @@ void Engine::input(float elapsedTime)
 		m_Character.setX(x * 64);
 		m_Character.setY(y * 64);
 	}
+
+	if (Keyboard::isKeyPressed(Keyboard::LShift)) {
+		zoomSpeed = 5;
+	}
+	else {
+		zoomSpeed = 1;
+	}
 	
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
@@ -79,11 +86,9 @@ void Engine::input(float elapsedTime)
 			m_Character.dir = 1;
 			if (Keyboard::isKeyPressed(Keyboard::LShift)) {
 				m_Character.setSpeed((float)0.4);
-				zoomSpeed = 5;
 			}
 			else {
 				m_Character.setSpeed((float)0.2);
-				zoomSpeed = 1;
 			}
 			m_Character.Currentframe += 0.005 * elapsedTime;
 			if (m_Character.Currentframe > 3) m_Character.Currentframe -= 3;

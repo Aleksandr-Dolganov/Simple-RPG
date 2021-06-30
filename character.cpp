@@ -66,8 +66,8 @@ void Character::randPos() {
 }
 
 void Character::collision() {
-	for (int i = m_Position.y / 64; i < (m_Position.y + 64) / 64; i++) {
-		for (int j = m_Position.x / 64; j < (m_Position.x + 64) / 64; j++)
+	for (int i = (m_Position.y + 8) / 64; i < (m_Position.y + 56) / 64; i++) {
+		for (int j = (m_Position.x + 8) / 64; j < (m_Position.x + 56) / 64; j++)
 		{
 			if (i > 0 and j > 0 and i < 30 and j < 30) {
 				if (TileMap[0][i][j] == 'w'
@@ -79,19 +79,19 @@ void Character::collision() {
 				{
 					if (dy > 0)
 					{
-						m_Position.y = i * 64 - 64;
+						m_Position.y = i * 64 - 56;
 					}
 					if (dy < 0)
 					{
-						m_Position.y = i * 64 + 64;
+						m_Position.y = i * 64 + 56;
 					}
 					if (dx > 0)
 					{
-						m_Position.x = j * 64 - 64;
+						m_Position.x = j * 64 - 56;
 					}
 					if (dx < 0)
 					{
-						m_Position.x = j * 64 + 64;
+						m_Position.x = j * 64 + 56;
 					}
 				}
 			}
