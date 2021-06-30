@@ -13,6 +13,9 @@ class Engine
 private:
 	Font font;
 	Text HealthText;
+	Text GameTimeOver;
+	Text CloseWindow;
+	Text GAMEOVER;
 
 	RenderWindow m_Window;// Окно
 

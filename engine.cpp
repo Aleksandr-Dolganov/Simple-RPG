@@ -35,17 +35,32 @@ Engine::Engine()
 
 	font.loadFromFile("Textures/Fonts/Kingthings Petrock.ttf");
 	HealthText.setFont(font);
+	GameTimeOver.setFont(font);
+	CloseWindow.setFont(font);
 	HealthText.setCharacterSize(50);
-	HealthText.setFillColor(Color(237, 60, 146, 255));
+	GameTimeOver.setCharacterSize(70);
+	CloseWindow.setCharacterSize(75);
+	HealthText.setFillColor(Color::Red);
+	GameTimeOver.setFillColor(Color::White);
+	CloseWindow.setFillColor(Color::White);
+	CloseWindow.setString("Press \"Space\" to close game.");
+	GAMEOVER.setFont(font);
+	GAMEOVER.setCharacterSize(100);
+	GAMEOVER.setFillColor(Color::White);
+	GAMEOVER.setString("You died");
+	GAMEOVER.setPosition(310, 0);
 }
 
 void Engine::start()
 {
 	Clock clock;
 	Clock cooldown;
+	Clock GameTime;
+	int GameTimeInSec;
 	Cam.setSize(512, 512);// Задаем начальный зум
 	while (m_Window.isOpen() and m_Character.Health > 0)
 	{
+		GameTimeInSec = GameTime.getElapsedTime().asSeconds();
 		float time = (float)clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = time / 800;
@@ -62,13 +77,28 @@ void Engine::start()
 		battle();
 		drawMap(time);
 	}
+	while (!Keyboard::isKeyPressed(Keyboard::Space)) {
+		m_Window.clear(Color(237, 144, 121, 255));
+		m_Window.setView(View());
+		std::ostringstream GameTimeStr;
+		GameTimeStr << GameTimeInSec;
+		GameTimeOver.setString("Time in game: " + GameTimeStr.str() + " seconds");
+		GameTimeOver.setPosition(160, 512);
+		m_Window.draw(GameTimeOver);
+		CloseWindow.setPosition(120, 900);
+		m_Window.draw(CloseWindow);
+		m_Window.draw(GAMEOVER);
+		m_Window.display();
+	}
 	m_Window.close();
 }
 void Engine::input(float elapsedTime)
 {
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
 	{
-		m_Window.close();
+		m_Character.Health = 0;
+		GAMEOVER.setString("Game closed");
+		GAMEOVER.setPosition(256, 0);
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::Space))
