@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <ctime>
+#include <sstream>
 #include "character.h"
 #include "view.h"
 #include "enemy.h"
@@ -10,6 +11,9 @@ using namespace sf;
 class Engine
 {
 private:
+	Font font;
+	Text HealthText;
+
 	RenderWindow m_Window;// Окно
 
 	float CurrentWframe;// Текущий кадр анимации воды

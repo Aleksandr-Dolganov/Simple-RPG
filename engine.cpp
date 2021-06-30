@@ -32,6 +32,11 @@ Engine::Engine()
 	m_mapW.setTexture(m_mapWTexture);
 	m_mapW.setScale(2, 2); // Увеличение размера спрайта воды в 2 раза (теперь 64*64 п.)
 	ready = 1;
+
+	font.loadFromFile("Textures/Fonts/Kingthings Petrock.ttf");
+	HealthText.setFont(font);
+	HealthText.setCharacterSize(50);
+	HealthText.setFillColor(Color(237, 60, 146, 255));
 }
 
 void Engine::start()
@@ -79,7 +84,7 @@ void Engine::input(float elapsedTime)
 	else {
 		zoomSpeed = 1;
 	}
-	
+
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
 		if (m_Character.getPos().x > 0) {
@@ -162,8 +167,8 @@ void Engine::input(float elapsedTime)
 			moveCam(m_Character.getPos().x, m_Character.getPos().y);
 		}
 	}
-	else if (m_Character.dy > 0) { 
-		m_Character.m_Sprite.setTextureRect(IntRect(32, 0, 32, 32)); 
+	else if (m_Character.dy > 0) {
+		m_Character.m_Sprite.setTextureRect(IntRect(32, 0, 32, 32));
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::F2)) {
@@ -250,6 +255,12 @@ void Engine::drawMap(float elapsedTime)
 	m_Window.draw(e_Enemy.getSprite());
 	m_Window.draw(m_Character.getSprite());
 	m_Window.setView(Cam);
+
+	std::ostringstream PlayerHealth;
+	PlayerHealth << m_Character.Health;
+	HealthText.setString("Health: " + PlayerHealth.str());
+	HealthText.setPosition(Cam.getCenter().x - 256, Cam.getCenter().y + 200);
+	m_Window.draw(HealthText);
 
 	m_Window.display();
 }
@@ -353,7 +364,7 @@ void Engine::randomMap() {
 void Engine::battle() {
 	FloatRect Ch = m_Character.getSprite().getGlobalBounds(),
 		En = e_Enemy.getSprite().getGlobalBounds();
-	
+
 	if (Ch.intersects(En) and ready) {
 		m_Character.Health -= 1;
 		ready = 0;
