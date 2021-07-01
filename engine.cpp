@@ -3,39 +3,50 @@
 
 Engine::Engine()
 {
+	// Рандомим карту и положение персонажа/врага
 	srand(time(0));
 	randomMap();
 	m_Character.randPos();
 	e_Enemy.randPos();
-
+	// Начальный кадр анимации воды
+	CurrentWframe = 0;
+	// Разрешение окна 512*512
 	Vector2f resolution;
 	resolution.x = 512;
 	resolution.y = 512;
-
-	CurrentWframe = 0;
-
+	// Создаем окно с параметрами
+	m_Window.create(VideoMode(resolution.x, resolution.y),
+		"Simple 2D Rpg Project by Sam W.");
+	// Начальная скорость зума
 	zoomSpeed = 1;
-	// Создаем окно 512*512 пикселей
-	m_Window.create(VideoMode(resolution.x, resolution.y), "Simple 2D Rpg Project by Sam W.");
-	Cam.setCenter(m_Character.getPos().x + 32, m_Character.getPos().y + 16);// Задаем начальное положение камеры
-	// Задаем текстуры для спрайтов карты и воды через Image (для работы прозрачности текстур)
+	// Центр карты на позиции игрока
+	Cam.setCenter(m_Character.getPos().x + 32, m_Character.getPos().y + 16);
+	// Загружаем текстуры карты в спрайт 
+	// (и увеличиваем размер до 64*64 (текстуры 32*32))
 	Image m_mapImage;
 	m_mapImage.loadFromFile("Textures/Background/bgTileset.png");
 	m_mapImage.createMaskFromColor(Color::White, 0);
 	m_mapTexture.loadFromImage(m_mapImage);
 	m_map.setTexture(m_mapTexture);
-	m_map.setScale(2, 2); // Увеличение размера спрайта в 2 раза (теперь 64*64 п.)
+	m_map.setScale(2, 2);
+	// Загружаем текстуры воды в спрайт 
+	// (и увеличиваем размер до 64*64 (текстуры 32*32))
 	Image m_mapWImage;
 	m_mapWImage.loadFromFile("Textures/Background/bgWTileset.png");
 	m_mapWImage.createMaskFromColor(Color::White, 0);
 	m_mapWTexture.loadFromImage(m_mapWImage);
 	m_mapW.setTexture(m_mapWTexture);
-	m_mapW.setScale(2, 2); // Увеличение размера спрайта воды в 2 раза (теперь 64*64 п.)
+	m_mapW.setScale(2, 2);
+	// Готовность к бою
 	ready = 1;
-
+	// Рестарт запрещен
 	restart = false;
-
+	// Инициализация текстов
 	initTexts();
+}
+Engine::~Engine() {
+	std::cout << std::endl << std::endl
+		<< "\t\tGame Closed" << std::endl << std::endl;
 }
 
 void Engine::initTexts() {
@@ -80,41 +91,48 @@ void Engine::initMMTexts(Text& GameName, Text& Author, Text& PressSpace) {
 
 void Engine::start()
 {
-	Clock clock;
-	Clock cooldown;
-	Clock GameTime;
+	// Таймеры
+	Clock clock, cooldown, GameTime;
 	int GameTimeInSec = 0;
 	restart = false;
+	// Запускаем главное меню
 	GameMainMenu();
-	Cam.setSize(512, 512);// Задаем начальный зум
+	// Начальный зум камеры
+	Cam.setSize(512, 512);
+	// Работа игры
 	GameGoing(GameTimeInSec, GameTime, clock, cooldown);
+	// Окно проигрыша
 	GameOver(GameTimeInSec);
+	// Закрытие окна
 	m_Window.close();
+	// Если мы нажали restart, то запускаем новый движок
 	if (restart) Engine().start(); restart = false;
 }
+
 void Engine::input(float elapsedTime)
 {
+	// Выход из игры если нажат "Escape"
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
 	{
-		m_Character.Health = 0;
+		m_Character.Health = -5;
 		GAMEOVER.setString("Game closed");
 		GAMEOVER.setPosition(256, 0);
 	}
-
+	// Тестовый телепорт в середину клетки
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
 		int x = (m_Character.getPos().x + 32) / 64, y = (m_Character.getPos().y + 32) / 64;
 		m_Character.setX(x * 64);
 		m_Character.setY(y * 64);
 	}
-
+	// Ускорение зума
 	if (Keyboard::isKeyPressed(Keyboard::LShift)) {
 		zoomSpeed = 5;
 	}
 	else {
 		zoomSpeed = 1;
 	}
-
+	// Движение на WASD
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
 		if (m_Character.getPos().x > 0) {
@@ -134,7 +152,6 @@ void Engine::input(float elapsedTime)
 	else if (m_Character.dx < 0) {
 		m_Character.m_Sprite.setTextureRect(IntRect(32, 32, 32, 32));
 	}
-
 	if (Keyboard::isKeyPressed(Keyboard::D))
 	{
 		if (m_Character.getPos().x < 1920 - 64) {
@@ -156,7 +173,6 @@ void Engine::input(float elapsedTime)
 	else if (m_Character.dx > 0) {
 		m_Character.m_Sprite.setTextureRect(IntRect(32, 64, 32, 32));
 	}
-
 	if (Keyboard::isKeyPressed(Keyboard::W))
 	{
 		if (m_Character.getPos().y > 0) {
@@ -178,7 +194,6 @@ void Engine::input(float elapsedTime)
 	else if (m_Character.dy < 0) {
 		m_Character.m_Sprite.setTextureRect(IntRect(32, 96, 32, 32));
 	}
-
 	if (Keyboard::isKeyPressed(Keyboard::S))
 	{
 		if (m_Character.getPos().y < 1920 - 64) {
@@ -200,7 +215,7 @@ void Engine::input(float elapsedTime)
 	else if (m_Character.dy > 0) {
 		m_Character.m_Sprite.setTextureRect(IntRect(32, 0, 32, 32));
 	}
-
+	// Рандомизация карты по нажатию F2
 	if (Keyboard::isKeyPressed(Keyboard::F2)) {
 		randomMap();
 		m_Character.randPos();
@@ -208,7 +223,7 @@ void Engine::input(float elapsedTime)
 		Cam.setCenter(m_Character.getPos());
 		sleep(sf::seconds(0.5));
 	}
-
+	// Управление зумом (тестово)
 	if (Keyboard::isKeyPressed(Keyboard::Subtract))
 	{
 		Cam.setSize(Cam.getSize().x + zoomSpeed, Cam.getSize().y + zoomSpeed);
@@ -224,12 +239,15 @@ void Engine::input(float elapsedTime)
 }
 void Engine::update(float dtAsSeconds)
 {
+	// Обновление персонажа и врага
 	m_Character.updateCh(dtAsSeconds);
 	e_Enemy.updateEn(dtAsSeconds);
 }
 void Engine::drawMap(float elapsedTime)
 {
-	m_Window.clear();// Очищаем окно
+	// Очистка окна
+	m_Window.clear();
+	// Отрисовка тайлов из карты в view.h
 	for (int l = 0; l < LAYERS; l++) {
 		m_map.setPosition(0, 0);
 		for (int i = 0; i < HEIGHT_MAP; i++) {
@@ -281,22 +299,23 @@ void Engine::drawMap(float elapsedTime)
 			}
 		}
 	}
-
+	// Отрисовка персонажа и врага
 	m_Window.draw(e_Enemy.getSprite());
-	m_Window.draw(m_Character.getSprite());
+	m_Window.draw(m_Character.m_Sprite);
+	// Слежение камеры за игроком
 	m_Window.setView(Cam);
-
+	// Отрисовка здоровья в левом нижнем углу экрана
 	std::ostringstream PlayerHealth;
 	PlayerHealth << m_Character.Health;
 	HealthText.setString("Health: " + PlayerHealth.str());
 	HealthText.setPosition(Cam.getCenter().x - 256, Cam.getCenter().y + 200);
 	m_Window.draw(HealthText);
-
+	// Отрисовка всего этого в окне
 	m_Window.display();
 }
-
 void Engine::randomMap() {
 	int tmp;
+	// Очистка карты
 	for (int l = 0; l < LAYERS; l++) {
 		for (int i = 1; i < HEIGHT_MAP - 1; i++) {
 			for (int j = 1; j < WIDTH_MAP - 1; j++) {
@@ -304,6 +323,7 @@ void Engine::randomMap() {
 			}
 		}
 	}
+	// Заполнение первого слоя (земля/вода)
 	for (int i = 1; i < HEIGHT_MAP - 1; i++) {
 		for (int j = 1; j < WIDTH_MAP - 1; j++) {
 			tmp = rand() % 100;
@@ -311,6 +331,7 @@ void Engine::randomMap() {
 			if (tmp > 75 and tmp <= 100) TileMap[0][i][j] = 'w';
 		}
 	}
+	// Заполнение второго слоя деревьями, кустами, бревнами, цветами
 	for (int i = 1; i < HEIGHT_MAP - 1; i++) {
 		for (int j = 1; j < WIDTH_MAP - 1; j++) {
 			tmp = rand() % 100;
@@ -390,11 +411,10 @@ void Engine::randomMap() {
 		}
 	}
 }
-
 void Engine::battle() {
-	FloatRect Ch = m_Character.getSprite().getGlobalBounds(),
+	FloatRect Ch = m_Character.m_Sprite.getGlobalBounds(),
 		En = e_Enemy.getSprite().getGlobalBounds();
-
+	// Если игрок пересекается с врагом отнимать хп
 	if (Ch.intersects(En) and ready) {
 		m_Character.Health -= 1;
 		ready = 0;
@@ -419,7 +439,6 @@ void Engine::GameOver(int& GameTimeInSec) {
 		if (Keyboard::isKeyPressed(Keyboard::R)) restart = true;
 	}
 }
-
 void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 	Clock clock, Clock cooldown) {
 	while (m_Window.isOpen() and m_Character.Health > 0)
@@ -442,7 +461,6 @@ void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 		drawMap(time);
 	}
 }
-
 void Engine::GameMainMenu() {
 	bool start = false;
 	Text GameName, Author, PressSpace;

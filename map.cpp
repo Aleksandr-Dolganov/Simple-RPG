@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+// Базовая карта уровня (тестовая)
 sf::String TileMap[2][30] = {
    {
 	   "gggggggggggggggggggggggggggggg",

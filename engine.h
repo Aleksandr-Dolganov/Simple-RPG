@@ -2,28 +2,30 @@
 #include <SFML\Graphics.hpp>
 #include <ctime>
 #include <sstream>
+#include <iostream>
 #include "character.h"
 #include "view.h"
 #include "enemy.h"
 #include "map.h"
 using namespace sf;
 
+// Класс Движка игры
 class Engine
 {
 private:
-	Font font;
-	Text HealthText;
-	Text GameTimeOver;
-	Text CloseWindow;
-	Text CloseWindow2;
-	Text GAMEOVER;
+	Font font;// Шрифт для текста
+	Text HealthText;// Отображение кол-ва здоровья
+	Text GameTimeOver;// Отображение времени игры на окне проигрыша
+	Text CloseWindow;// Подсказка закрытия игры
+	Text CloseWindow2;// Подсказка рестарта игры
+	Text GAMEOVER;// Заголовок окна проигрыша
+	// Функция настройки тектов
 	void initTexts();
+	// Функция настройки текстов главного меню
 	void initMMTexts(Text&, Text&, Text&);
 
-	RenderWindow m_Window;// Окно
-
+	RenderWindow m_Window;// Экземпляр окна
 	float CurrentWframe;// Текущий кадр анимации воды
-
 	float zoomSpeed;// Скорость зума
 
 	Sprite m_map;// Спрайт карты
@@ -32,27 +34,35 @@ private:
 	Texture m_mapWTexture;// Текстуры воды (с анимацией)
 
 	Character m_Character;// Экземпляр персонажа
+	Enemy e_Enemy;// Экземпляр врага
 
-	Enemy e_Enemy;
-
-	void input(float);// Функция отслеживания нажатия клавиш управления
-
-	void update(float);// Функция для обновления персонажа
-
-	void drawMap(float);// Функция отрисовки карты (из файла view.h)
-	void randomMap();// Функция рандомизации карты
-
+	// Функция отслеживания нажатия клавиш управления
+	void input(float);
+	// Функция для обновления персонажа
+	void update(float);
+	// Функция отрисовки карты (из файла view.h)
+	void drawMap(float);
+	// Функция рандомизации карты
+	void randomMap();
+	// Функция отвечающая за бой
 	void battle();
+	// Переменная готовности к бою 
+	// (нужна для 0,5 секунд неуязвимости после получения урона)
 	int ready;
 
-	bool restart;
-
+	bool restart;// Переменная для рестарта игры
+	// Экран проигрыша
 	void GameOver(int&);
+	// Работа игры
 	void GameGoing(int&, Clock, Clock, Clock);
+	// Главное меню
 	void GameMainMenu();
-
 public:
-	Engine();// Конструктор
+	// Конструктор
+	Engine();
+	// Деструктор
+	~Engine();
 
-	void start();// Функция запуска игры
+	// Функция запуска игры
+	void start();
 };

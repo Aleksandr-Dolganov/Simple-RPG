@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML\Graphics.hpp>
-// Камера
+// Экземпляр камеры
 static sf::View Cam;
 // Функция управления камерой (слежение за игроком)
 inline void moveCam(float x, float y) {
