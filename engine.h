@@ -17,6 +17,7 @@ private:
 	Text CloseWindow;
 	Text CloseWindow2;
 	Text GAMEOVER;
+	void initTexts();
 
 	RenderWindow m_Window;// Окно
 

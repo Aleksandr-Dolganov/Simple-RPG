@@ -35,6 +35,10 @@ Engine::Engine()
 
 	restart = false;
 
+	initTexts();
+}
+
+void Engine::initTexts() {
 	font.loadFromFile("Textures/Fonts/Kingthings Petrock.ttf");
 	HealthText.setFont(font);
 	GameTimeOver.setFont(font);
