@@ -33,17 +33,23 @@ Engine::Engine()
 	m_mapW.setScale(2, 2); // Увеличение размера спрайта воды в 2 раза (теперь 64*64 п.)
 	ready = 1;
 
+	restart = false;
+
 	font.loadFromFile("Textures/Fonts/Kingthings Petrock.ttf");
 	HealthText.setFont(font);
 	GameTimeOver.setFont(font);
 	CloseWindow.setFont(font);
+	CloseWindow2.setFont(font);
 	HealthText.setCharacterSize(50);
 	GameTimeOver.setCharacterSize(70);
 	CloseWindow.setCharacterSize(75);
+	CloseWindow2.setCharacterSize(75);
 	HealthText.setFillColor(Color::Red);
 	GameTimeOver.setFillColor(Color::White);
 	CloseWindow.setFillColor(Color::White);
 	CloseWindow.setString("Press \"Space\" to close game.");
+	CloseWindow2.setFillColor(Color::White);
+	CloseWindow2.setString("Press \"R\" to restart game.");
 	GAMEOVER.setFont(font);
 	GAMEOVER.setCharacterSize(100);
 	GAMEOVER.setFillColor(Color::White);
@@ -56,41 +62,14 @@ void Engine::start()
 	Clock clock;
 	Clock cooldown;
 	Clock GameTime;
-	int GameTimeInSec;
+	int GameTimeInSec = 0;
+	restart = false;
+	GameMainMenu();
 	Cam.setSize(512, 512);// Задаем начальный зум
-	while (m_Window.isOpen() and m_Character.Health > 0)
-	{
-		GameTimeInSec = GameTime.getElapsedTime().asSeconds();
-		float time = (float)clock.getElapsedTime().asMicroseconds();
-		clock.restart();
-		time = time / 800;
-		if (!ready) {
-			if (cooldown.getElapsedTime().asSeconds() >= 0.5) {
-				ready = 1;
-				cooldown.restart();
-			}
-		}
-		else cooldown.restart();
-
-		input(time);
-		update(time);
-		battle();
-		drawMap(time);
-	}
-	while (!Keyboard::isKeyPressed(Keyboard::Space)) {
-		m_Window.clear(Color(237, 144, 121, 255));
-		m_Window.setView(View());
-		std::ostringstream GameTimeStr;
-		GameTimeStr << GameTimeInSec;
-		GameTimeOver.setString("Time in game: " + GameTimeStr.str() + " seconds");
-		GameTimeOver.setPosition(160, 512);
-		m_Window.draw(GameTimeOver);
-		CloseWindow.setPosition(120, 900);
-		m_Window.draw(CloseWindow);
-		m_Window.draw(GAMEOVER);
-		m_Window.display();
-	}
+	GameGoing(GameTimeInSec, GameTime, clock, cooldown);
+	GameOver(GameTimeInSec);
 	m_Window.close();
+	if (restart) Engine().start(); restart = false;
 }
 void Engine::input(float elapsedTime)
 {
@@ -398,5 +377,64 @@ void Engine::battle() {
 	if (Ch.intersects(En) and ready) {
 		m_Character.Health -= 1;
 		ready = 0;
+	}
+}
+
+void Engine::GameOver(int& GameTimeInSec) {
+	while (!Keyboard::isKeyPressed(Keyboard::Space) and !restart) {
+		m_Window.clear(Color(237, 144, 121, 255));
+		m_Window.setView(View());
+		std::ostringstream GameTimeStr;
+		GameTimeStr << GameTimeInSec;
+		GameTimeOver.setString("Time in game: " + GameTimeStr.str() + " seconds");
+		GameTimeOver.setPosition(160, 512);
+		m_Window.draw(GameTimeOver);
+		CloseWindow.setPosition(120, 900);
+		CloseWindow2.setPosition(120, 800);
+		m_Window.draw(CloseWindow);
+		m_Window.draw(CloseWindow2);
+		m_Window.draw(GAMEOVER);
+		m_Window.display();
+		if (Keyboard::isKeyPressed(Keyboard::R)) restart = true;
+	}
+}
+
+void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
+	Clock clock, Clock cooldown) {
+	while (m_Window.isOpen() and m_Character.Health > 0)
+	{
+		GameTimeInSec = GameTime.getElapsedTime().asSeconds();
+		float time = (float)clock.getElapsedTime().asMicroseconds();
+		clock.restart();
+		time = time / 800;
+		if (!ready) {
+			if (cooldown.getElapsedTime().asSeconds() >= 0.5) {
+				ready = 1;
+				cooldown.restart();
+			}
+		}
+		else cooldown.restart();
+
+		input(time);
+		update(time);
+		battle();
+		drawMap(time);
+	}
+}
+
+void Engine::GameMainMenu() {
+	bool start = false;
+	Text GameName;
+	GameName.setFont(font);
+	GameName.setFillColor(Color::White);
+	GameName.setCharacterSize(100);
+	GameName.setString("Simple RPG");
+	GameName.setPosition(310, 0);
+	while (!start) {
+		m_Window.clear(Color(237, 144, 121, 255));
+		m_Window.setView(View());
+		m_Window.draw(GameName);
+		m_Window.display();
+		if (Keyboard::isKeyPressed(Keyboard::Space)) start = true;
 	}
 }

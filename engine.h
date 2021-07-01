@@ -15,6 +15,7 @@ private:
 	Text HealthText;
 	Text GameTimeOver;
 	Text CloseWindow;
+	Text CloseWindow2;
 	Text GAMEOVER;
 
 	RenderWindow m_Window;// Окно
@@ -41,6 +42,13 @@ private:
 
 	void battle();
 	int ready;
+
+	bool restart;
+
+	void GameOver(int&);
+	void GameGoing(int&, Clock, Clock, Clock);
+	void GameMainMenu();
+
 public:
 	Engine();// Конструктор
 
