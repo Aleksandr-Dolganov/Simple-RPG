@@ -8,7 +8,7 @@ Enemy::Enemy() {
 	e_Texture.loadFromFile("Textures/Enemy/bat_texture.png");
 	e_Sprite.setTexture(e_Texture);
 	e_Sprite.setScale(4, 4);
-	e_Sprite.setTextureRect(IntRect(0, 24, 16, 24));
+	e_Sprite.setTextureRect(IntRect(0, 24, 16, 16));
 
 	e_Position = Vector2f(0, 0);
 }
@@ -21,7 +21,7 @@ void Enemy::updateEn(float elapsedTime)
 	e_Sprite.setPosition(e_Position);
 	CurrentEframe += 0.009 * elapsedTime;
 	if (CurrentEframe > 5) CurrentEframe -= 5;
-	e_Sprite.setTextureRect(IntRect(16 * int(CurrentEframe), 24, 16, 24));
+	e_Sprite.setTextureRect(IntRect(16 * int(CurrentEframe), 24, 16, 16));
 
 }
 
