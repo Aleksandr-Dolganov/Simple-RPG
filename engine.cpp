@@ -60,6 +60,23 @@ void Engine::initTexts() {
 	GAMEOVER.setString("You died");
 	GAMEOVER.setPosition(310, 0);
 }
+void Engine::initMMTexts(Text& GameName, Text& Author, Text& PressSpace) {
+	GameName.setFont(font);
+	GameName.setFillColor(Color::White);
+	GameName.setCharacterSize(100);
+	GameName.setString("Simple RPG");
+	GameName.setPosition(300, 0);
+	Author.setFont(font);
+	Author.setFillColor(Color::White);
+	Author.setCharacterSize(70);
+	Author.setString("By Sam Wilde");
+	Author.setPosition(400, 100);
+	PressSpace.setFont(font);
+	PressSpace.setFillColor(Color::White);
+	PressSpace.setCharacterSize(70);
+	PressSpace.setString("Press \"Space\" to start game.");
+	PressSpace.setPosition(120, 900);
+}
 
 void Engine::start()
 {
@@ -429,21 +446,7 @@ void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 void Engine::GameMainMenu() {
 	bool start = false;
 	Text GameName, Author, PressSpace;
-	GameName.setFont(font);
-	GameName.setFillColor(Color::White);
-	GameName.setCharacterSize(100);
-	GameName.setString("Simple RPG");
-	GameName.setPosition(300, 0);
-	Author.setFont(font);
-	Author.setFillColor(Color::White);
-	Author.setCharacterSize(70);
-	Author.setString("By Sam Wilde");
-	Author.setPosition(400, 100);
-	PressSpace.setFont(font);
-	PressSpace.setFillColor(Color::White);
-	PressSpace.setCharacterSize(70);
-	PressSpace.setString("Press \"Space\" to start game.");
-	PressSpace.setPosition(120, 900);
+	initMMTexts(GameName, Author, PressSpace);
 	while (!start) {
 		m_Window.clear(Color(237, 144, 121, 255));
 		m_Window.setView(View());
