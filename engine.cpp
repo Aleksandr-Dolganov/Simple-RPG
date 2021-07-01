@@ -428,16 +428,28 @@ void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 
 void Engine::GameMainMenu() {
 	bool start = false;
-	Text GameName;
+	Text GameName, Author, PressSpace;
 	GameName.setFont(font);
 	GameName.setFillColor(Color::White);
 	GameName.setCharacterSize(100);
 	GameName.setString("Simple RPG");
-	GameName.setPosition(310, 0);
+	GameName.setPosition(300, 0);
+	Author.setFont(font);
+	Author.setFillColor(Color::White);
+	Author.setCharacterSize(70);
+	Author.setString("By Sam Wilde");
+	Author.setPosition(400, 100);
+	PressSpace.setFont(font);
+	PressSpace.setFillColor(Color::White);
+	PressSpace.setCharacterSize(70);
+	PressSpace.setString("Press \"Space\" to start game.");
+	PressSpace.setPosition(120, 900);
 	while (!start) {
 		m_Window.clear(Color(237, 144, 121, 255));
 		m_Window.setView(View());
 		m_Window.draw(GameName);
+		m_Window.draw(Author);
+		m_Window.draw(PressSpace);
 		m_Window.display();
 		if (Keyboard::isKeyPressed(Keyboard::Space)) start = true;
 	}
