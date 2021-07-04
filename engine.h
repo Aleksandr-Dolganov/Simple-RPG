@@ -26,6 +26,7 @@ private:
 	void initMMTexts(Text&, Text&, Text&);
 	// ћузыка
 	Music GameMusic;
+	Music MainMenuMusic;
 
 	RenderWindow m_Window;// Ёкземпл€р окна
 	float CurrentWframe;// “екущий кадр анимации воды

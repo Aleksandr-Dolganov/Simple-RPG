@@ -47,6 +47,9 @@ Engine::Engine()
 	GameMusic.openFromFile("Media/Music/Wynncraft - Triumphant Citadel.ogg");
 	GameMusic.setLoop(true);
 	GameMusic.setVolume(50);
+	MainMenuMusic.openFromFile("Media/Music/Wynncraft - Understated Pride.ogg");
+	MainMenuMusic.setLoop(true);
+	MainMenuMusic.setVolume(50);
 }
 Engine::~Engine() {
 	std::cout << std::endl << std::endl
@@ -321,15 +324,15 @@ void Engine::randomMap() {
 	int tmp;
 	// Очистка карты
 	for (int l = 0; l < LAYERS; l++) {
-		for (int i = 1; i < HEIGHT_MAP - 1; i++) {
-			for (int j = 1; j < WIDTH_MAP - 1; j++) {
+		for (int i = 0; i < HEIGHT_MAP; i++) {
+			for (int j = 0; j < WIDTH_MAP; j++) {
 				TileMap[l][i][j] = ' ';
 			}
 		}
 	}
 	// Заполнение первого слоя (земля/вода)
-	for (int i = 1; i < HEIGHT_MAP - 1; i++) {
-		for (int j = 1; j < WIDTH_MAP - 1; j++) {
+	for (int i = 0; i < HEIGHT_MAP; i++) {
+		for (int j = 0; j < WIDTH_MAP; j++) {
 			tmp = rand() % 100;
 			if (tmp >= 0 and tmp <= 75) TileMap[0][i][j] = 'g';
 			if (tmp > 75 and tmp <= 100) TileMap[0][i][j] = 'w';
@@ -426,6 +429,7 @@ void Engine::battle() {
 }
 
 void Engine::GameOver(int& GameTimeInSec) {
+	MainMenuMusic.play();
 	while (!Keyboard::isKeyPressed(Keyboard::Space) and !restart) {
 		m_Window.clear(Color(237, 144, 121, 255));
 		m_Window.setView(View());
@@ -442,6 +446,7 @@ void Engine::GameOver(int& GameTimeInSec) {
 		m_Window.display();
 		if (Keyboard::isKeyPressed(Keyboard::R)) restart = true;
 	}
+	MainMenuMusic.stop();
 }
 void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 	Clock clock, Clock cooldown) {
@@ -468,6 +473,7 @@ void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 	GameMusic.stop();
 }
 void Engine::GameMainMenu() {
+	MainMenuMusic.play();
 	bool start = false;
 	Text GameName, Author, PressSpace;
 	initMMTexts(GameName, Author, PressSpace);
@@ -480,4 +486,5 @@ void Engine::GameMainMenu() {
 		m_Window.display();
 		if (Keyboard::isKeyPressed(Keyboard::Space)) start = true;
 	}
+	MainMenuMusic.stop();
 }
