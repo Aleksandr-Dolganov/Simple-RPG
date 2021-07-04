@@ -43,6 +43,10 @@ Engine::Engine()
 	restart = false;
 	// Инициализация текстов
 	initTexts();
+	// Загрузка файла музыки
+	GameMusic.openFromFile("Media/Music/Wynncraft - Triumphant Citadel.ogg");
+	GameMusic.setLoop(true);
+	GameMusic.setVolume(50);
 }
 Engine::~Engine() {
 	std::cout << std::endl << std::endl
@@ -441,6 +445,7 @@ void Engine::GameOver(int& GameTimeInSec) {
 }
 void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 	Clock clock, Clock cooldown) {
+	GameMusic.play();
 	while (m_Window.isOpen() and m_Character.Health > 0)
 	{
 		GameTimeInSec = GameTime.getElapsedTime().asSeconds();
@@ -460,6 +465,7 @@ void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 		battle();
 		drawMap(time);
 	}
+	GameMusic.stop();
 }
 void Engine::GameMainMenu() {
 	bool start = false;

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
 #include <ctime>
 #include <sstream>
 #include <iostream>
@@ -23,6 +24,8 @@ private:
 	void initTexts();
 	// ‘ункци€ настройки текстов главного меню
 	void initMMTexts(Text&, Text&, Text&);
+	// ћузыка
+	Music GameMusic;
 
 	RenderWindow m_Window;// Ёкземпл€р окна
 	float CurrentWframe;// “екущий кадр анимации воды
