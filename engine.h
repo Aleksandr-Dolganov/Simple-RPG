@@ -10,6 +10,7 @@
 #include "map.h"
 using namespace sf;
 
+// Структура Интерфейса
 struct Interface {
 	Sprite Health;
 	Sprite HealthCur;
@@ -31,7 +32,7 @@ private:
 	// Функция настройки тектов
 	void initTexts();
 	// Функция настройки текстов главного меню
-	void initMMTexts(Text&, Text&, Text&);
+	void initMMTexts(Text&, Text&, Text&, Text&, Text&);
 	// Музыка
 	Music GameMusic;
 	Music MainMenuMusic;
@@ -45,7 +46,7 @@ private:
 	Texture m_mapTexture;// Текстуры карты
 	Texture m_mapWTexture;// Текстуры воды (с анимацией)
 
-	Interface interface;
+	Interface interface;// Экземпляр структуры интерфейса
 
 	Character m_Character;// Экземпляр персонажа
 	Enemy e_Enemy;// Экземпляр врага
@@ -71,6 +72,8 @@ private:
 	void GameGoing(int&, Clock, Clock, Clock);
 	// Главное меню
 	void GameMainMenu();
+
+	void GameControls();
 public:
 	// Конструктор
 	Engine();

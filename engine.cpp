@@ -37,6 +37,7 @@ Engine::Engine()
 	m_mapWTexture.loadFromImage(m_mapWImage);
 	m_mapW.setTexture(m_mapWTexture);
 	m_mapW.setScale(2, 2);
+	// Загрузка текстур интерфейса и изменение размера
 	Image InterfaceTexture, Widgets;
 	InterfaceTexture.loadFromFile("Textures/Interface/icons.png");
 	Widgets.loadFromFile("Textures/Interface/widgets.png");
@@ -93,7 +94,8 @@ void Engine::initTexts() {
 	GAMEOVER.setString("You died");
 	GAMEOVER.setPosition(310, 0);
 }
-void Engine::initMMTexts(Text& GameName, Text& Author, Text& PressSpace) {
+void Engine::initMMTexts(Text& GameName, Text& Author, 
+	Text& PressSpace, Text& MainMenuHelp, Text& CloseGame) {
 	GameName.setFont(font);
 	GameName.setFillColor(Color::White);
 	GameName.setCharacterSize(100);
@@ -108,7 +110,17 @@ void Engine::initMMTexts(Text& GameName, Text& Author, Text& PressSpace) {
 	PressSpace.setFillColor(Color::White);
 	PressSpace.setCharacterSize(70);
 	PressSpace.setString("Press \"Space\" to start game.");
-	PressSpace.setPosition(120, 900);
+	PressSpace.setPosition(120, 700);
+	MainMenuHelp.setFont(font);
+	MainMenuHelp.setFillColor(Color::White);
+	MainMenuHelp.setCharacterSize(70);
+	MainMenuHelp.setString("Press \"F\" to see controls.");
+	MainMenuHelp.setPosition(120, 800);
+	CloseGame.setFont(font);
+	CloseGame.setFillColor(Color::White);
+	CloseGame.setCharacterSize(70);
+	CloseGame.setString("Press \"Escape\" to close game.");
+	CloseGame.setPosition(120, 900);
 }
 
 void Engine::start()
@@ -329,9 +341,9 @@ void Engine::drawMap(float elapsedTime)
 	// Отрисовка здоровья в левом нижнем углу экрана
 	std::ostringstream PlayerHealth;
 	PlayerHealth << m_Character.Health;
-	HealthText.setString(PlayerHealth.str()+ " / 20");
-	if(m_Character.Health >=10 ){
-		HealthText.setPosition(Cam.getCenter().x - 200, Cam.getCenter().y + 200); 
+	HealthText.setString(PlayerHealth.str() + " / 20");
+	if (m_Character.Health >= 10) {
+		HealthText.setPosition(Cam.getCenter().x - 200, Cam.getCenter().y + 200);
 	}
 	else {
 		HealthText.setPosition(Cam.getCenter().x - 190, Cam.getCenter().y + 200);
@@ -346,7 +358,7 @@ void Engine::drawMap(float elapsedTime)
 		Cam.getCenter().y + 235);
 	int tmp1;
 	tmp1 = 182.0 * (m_Character.Health / 20.0);
-	interface.HealthCur.setTextureRect(IntRect(0, 79, 
+	interface.HealthCur.setTextureRect(IntRect(0, 79,
 		tmp1, 5));
 	m_Window.draw(interface.Health);
 	m_Window.draw(interface.HealthCur);
@@ -508,16 +520,44 @@ void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 void Engine::GameMainMenu() {
 	MainMenuMusic.play();
 	bool start = false;
-	Text GameName, Author, PressSpace;
-	initMMTexts(GameName, Author, PressSpace);
+	Text GameName, Author, PressSpace, MainMenuHelp, CloseGame;
+	initMMTexts(GameName, Author, PressSpace, MainMenuHelp, CloseGame);
 	while (!start) {
 		m_Window.clear(Color(237, 144, 121, 255));
 		m_Window.setView(View());
 		m_Window.draw(GameName);
 		m_Window.draw(Author);
 		m_Window.draw(PressSpace);
+		m_Window.draw(MainMenuHelp);
+		m_Window.draw(CloseGame);
 		m_Window.display();
 		if (Keyboard::isKeyPressed(Keyboard::Space)) start = true;
+		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+			m_Window.close();
+			exit(0);
+		}
+		if (Keyboard::isKeyPressed(Keyboard::F)) GameControls();
 	}
 	MainMenuMusic.stop();
+}
+void Engine::GameControls() {
+	Text Controls, Title;
+	Controls.setFont(font);
+	Controls.setFillColor(Color::White);
+	Controls.setCharacterSize(70);
+	Controls.setString("\"W\", \"A\", \"S\", \"D\" - movement.\n\"Shift\" - run.\n\"Escape\" - exit to mainmenu.\n");
+	Controls.setPosition(120, 100);
+	Title.setFont(font);
+	Title.setFillColor(Color::White);
+	Title.setCharacterSize(100);
+	Title.setString("Controls");
+	Title.setPosition(330, -10);
+	while (!Keyboard::isKeyPressed(Keyboard::Escape)) {
+		m_Window.clear(Color(237, 144, 121, 255));
+		m_Window.setView(View());
+		m_Window.draw(Controls);
+		m_Window.draw(Title);
+		m_Window.display();
+	}
+	while (Keyboard::isKeyPressed(Keyboard::Escape)) sleep(milliseconds(1));
 }
