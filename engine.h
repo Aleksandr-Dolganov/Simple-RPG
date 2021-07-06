@@ -10,6 +10,14 @@
 #include "map.h"
 using namespace sf;
 
+struct Interface {
+	Sprite Health;
+	Sprite HealthCur;
+	Texture Texture;
+	Sprite Background;
+	sf::Texture Widgets;
+};
+
 //  ласс ƒвижка игры
 class Engine
 {
@@ -36,6 +44,8 @@ private:
 	Sprite m_mapW;// —прайт воды (с анимацией)
 	Texture m_mapTexture;// “екстуры карты
 	Texture m_mapWTexture;// “екстуры воды (с анимацией)
+
+	Interface interface;
 
 	Character m_Character;// Ёкземпл€р персонажа
 	Enemy e_Enemy;// Ёкземпл€р врага

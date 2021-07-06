@@ -37,6 +37,21 @@ Engine::Engine()
 	m_mapWTexture.loadFromImage(m_mapWImage);
 	m_mapW.setTexture(m_mapWTexture);
 	m_mapW.setScale(2, 2);
+	Image InterfaceTexture, Widgets;
+	InterfaceTexture.loadFromFile("Textures/Interface/icons.png");
+	Widgets.loadFromFile("Textures/Interface/widgets.png");
+	InterfaceTexture.createMaskFromColor(Color::White, 0);
+	Widgets.createMaskFromColor(Color::White, 0);
+	interface.Texture.loadFromImage(InterfaceTexture);
+	interface.Widgets.loadFromImage(Widgets);
+	interface.Background.setTexture(interface.Widgets);
+	interface.Background.setTextureRect(IntRect(0, 66, 200, 19));
+	interface.Background.setScale(0.98, 3);
+	interface.Health.setTexture(interface.Texture);
+	interface.Health.setTextureRect(IntRect(0, 84, 182, 5));
+	interface.Health.setScale(1, 3);
+	interface.HealthCur.setTexture(interface.Texture);
+	interface.HealthCur.setScale(1, 3);
 	// Готовность к бою
 	ready = 1;
 	// Рестарт запрещен
@@ -62,7 +77,7 @@ void Engine::initTexts() {
 	GameTimeOver.setFont(font);
 	CloseWindow.setFont(font);
 	CloseWindow2.setFont(font);
-	HealthText.setCharacterSize(50);
+	HealthText.setCharacterSize(30);
 	GameTimeOver.setCharacterSize(70);
 	CloseWindow.setCharacterSize(75);
 	CloseWindow2.setCharacterSize(75);
@@ -314,9 +329,27 @@ void Engine::drawMap(float elapsedTime)
 	// Отрисовка здоровья в левом нижнем углу экрана
 	std::ostringstream PlayerHealth;
 	PlayerHealth << m_Character.Health;
-	HealthText.setString("Health: " + PlayerHealth.str());
-	HealthText.setPosition(Cam.getCenter().x - 256, Cam.getCenter().y + 200);
+	HealthText.setString(PlayerHealth.str()+ " / 20");
+	if(m_Character.Health >=10 ){
+		HealthText.setPosition(Cam.getCenter().x - 200, Cam.getCenter().y + 200); 
+	}
+	else {
+		HealthText.setPosition(Cam.getCenter().x - 190, Cam.getCenter().y + 200);
+	}
+	interface.Background.setPosition(Cam.getCenter().x - 256,
+		Cam.getCenter().y + 200);
+	m_Window.draw(interface.Background);
 	m_Window.draw(HealthText);
+	interface.Health.setPosition(Cam.getCenter().x - 250,
+		Cam.getCenter().y + 235);
+	interface.HealthCur.setPosition(Cam.getCenter().x - 250,
+		Cam.getCenter().y + 235);
+	int tmp1;
+	tmp1 = 182.0 * (m_Character.Health / 20.0);
+	interface.HealthCur.setTextureRect(IntRect(0, 79, 
+		tmp1, 5));
+	m_Window.draw(interface.Health);
+	m_Window.draw(interface.HealthCur);
 	// Отрисовка всего этого в окне
 	m_Window.display();
 }
