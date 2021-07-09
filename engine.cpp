@@ -21,6 +21,7 @@ Engine::Engine()
 	zoomSpeed = 1;
 	// Центр карты на позиции игрока
 	Cam.setCenter(m_Character.getPos().x + 32, m_Character.getPos().y + 16);
+	moveCam(m_Character.getPos().x, m_Character.getPos().y);
 	// Загружаем текстуры карты в спрайт 
 	// (и увеличиваем размер до 64*64 (текстуры 32*32))
 	Image m_mapImage;
@@ -152,6 +153,7 @@ void Engine::input(float elapsedTime)
 		GAMEOVER.setString("Game closed");
 		GAMEOVER.setPosition(256, 0);
 	}
+#if (_DEBUG)
 	// Тестовый телепорт в середину клетки
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
@@ -166,6 +168,29 @@ void Engine::input(float elapsedTime)
 	else {
 		zoomSpeed = 1;
 	}
+	// Рандомизация карты по нажатию F2
+	if (Keyboard::isKeyPressed(Keyboard::F2)) {
+		randomMap();
+		m_Character.randPos();
+		e_Enemy.randPos();
+		Cam.setCenter(m_Character.getPos());
+		moveCam(m_Character.getPos().x, m_Character.getPos().y);
+		sleep(sf::seconds(0.5));
+	}
+	// Управление зумом (тестово)
+	if (Keyboard::isKeyPressed(Keyboard::Subtract))
+	{
+		Cam.setSize(Cam.getSize().x + zoomSpeed, Cam.getSize().y + zoomSpeed);
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Add))
+	{
+		Cam.setSize(Cam.getSize().x - zoomSpeed, Cam.getSize().y - zoomSpeed);
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Enter))
+	{
+		Cam.setSize(512, 512);
+	}
+#endif
 	// Движение на WASD
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
@@ -248,27 +273,6 @@ void Engine::input(float elapsedTime)
 	}
 	else if (m_Character.dy > 0) {
 		m_Character.m_Sprite.setTextureRect(IntRect(32, 0, 32, 32));
-	}
-	// Рандомизация карты по нажатию F2
-	if (Keyboard::isKeyPressed(Keyboard::F2)) {
-		randomMap();
-		m_Character.randPos();
-		e_Enemy.randPos();
-		Cam.setCenter(m_Character.getPos());
-		sleep(sf::seconds(0.5));
-	}
-	// Управление зумом (тестово)
-	if (Keyboard::isKeyPressed(Keyboard::Subtract))
-	{
-		Cam.setSize(Cam.getSize().x + zoomSpeed, Cam.getSize().y + zoomSpeed);
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Add))
-	{
-		Cam.setSize(Cam.getSize().x - zoomSpeed, Cam.getSize().y - zoomSpeed);
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Enter))
-	{
-		Cam.setSize(512, 512);
 	}
 }
 void Engine::update(float dtAsSeconds)

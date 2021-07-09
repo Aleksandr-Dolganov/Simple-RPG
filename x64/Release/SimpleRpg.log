@@ -1,5 +1,26 @@
-﻿  main.cpp
-main.obj : error LNK2005: "class sf::String (* TileMap)[30]" (?TileMap@@3PAY0BO@VString@sf@@A) уже определен в engine.obj
-main.obj : error LNK2005: "class sf::View Cam" (?Cam@@3VView@sf@@A) уже определен в engine.obj
-main.obj : error LNK2005: "void __cdecl moveCam(float,float)" (?moveCam@@YAXMM@Z) уже определен в engine.obj
-E:\C C++\SimpleRpg\x64\Release\SimpleRpg.exe : fatal error LNK1169: обнаружен многократно определенный символ - один или более
+﻿  engine.cpp
+E:\C C++\SimpleRpg\engine.cpp(7,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(18,52): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(18,38): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
+          with
+          [
+              T=float
+          ]
+E:\C C++\SimpleRpg\engine.cpp(51,39): warning C4305: аргумент: усечение из "double" в "float"
+E:\C C++\SimpleRpg\engine.cpp(205,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(226,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(247,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(268,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(301,44): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(364,15): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(505,54): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+  Создание кода
+  1 of 215 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
+  Создание кода завершено
+  SimpleRpg.vcxproj -> E:\C C++\SimpleRpg\x64\Release\SimpleRpg.exe
