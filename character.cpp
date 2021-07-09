@@ -74,7 +74,7 @@ void Character::collision() {
 	for (int i = (m_Position.y + 8) / 64; i < (m_Position.y + 56) / 64; i++) {
 		for (int j = (m_Position.x + 8) / 64; j < (m_Position.x + 56) / 64; j++)
 		{
-			if (i > 0 and j > 0 and i < 30 and j < 30) {
+			if (i >= 0 and j >= 0 and i < 30 and j < 30) {
 				if (TileMap[0][i][j] == 'w'
 					or TileMap[1][i][j] == 'C'
 					or TileMap[1][i][j] == 't'
