@@ -69,7 +69,7 @@ private:
 	// Экран проигрыша
 	void GameOver(int&);
 	// Работа игры
-	void GameGoing(int&, Clock, Clock, Clock);
+	void GameGoing(int&, Clock, Clock);
 	// Главное меню
 	void GameMainMenu();
 

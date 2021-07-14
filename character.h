@@ -17,12 +17,14 @@ public:
 	float dx, dy;// Скорость персонажа по осям
 	float Currentframe;// Текущий кадр анимации
 	int dir;// Направление персонажа
+	int BeforeBattleDir;
 	int Health;// Здоровье персонажа
 	Sprite m_Sprite;// Спрайт персонажа
-	
+
 	Vector2f getPos();// Функция передачи координат персонажа в основной класс (engine)
-	void setY(float);// Установка координаты Y для персонажа
-	void setX(float);// Установка координаты X для персонажа
+	Vector2f BeforeBattlePos;
+	void setPos(float x, float y);// Установка координат для персонажа
+	//void setX(float);// Установка координаты X для персонажа
 	void setSpeed(float);// Установка скорости персонажа
 
 	void updateCh(float elapsedTime);// Функция обновления персонажа (изменение кадров анимации и позиции персонажа)

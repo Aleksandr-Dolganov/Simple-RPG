@@ -18,6 +18,7 @@ Character::Character()
 	m_Position = Vector2f(0, 0);
 	// Ќачальное направление и скорости по ос€м
 	dir = dx = dy = 0;
+	BeforeBattlePos.x, BeforeBattlePos.y = 0;
 }
 Character::~Character() {
 	std::cout << std::endl << std::endl
@@ -27,10 +28,8 @@ Character::~Character() {
 Vector2f Character::getPos() {
 	return m_Position;
 }
-void Character::setX(float x) {
+void Character::setPos(float x, float y) {
 	m_Position.x = x;
-}
-void Character::setY(float y) {
 	m_Position.y = y;
 }
 void Character::randPos() {

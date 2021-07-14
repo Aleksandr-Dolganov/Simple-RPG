@@ -95,7 +95,7 @@ void Engine::initTexts() {
 	GAMEOVER.setString("You died");
 	GAMEOVER.setPosition(310, 0);
 }
-void Engine::initMMTexts(Text& GameName, Text& Author, 
+void Engine::initMMTexts(Text& GameName, Text& Author,
 	Text& PressSpace, Text& MainMenuHelp, Text& CloseGame) {
 	GameName.setFont(font);
 	GameName.setFillColor(Color::White);
@@ -127,7 +127,7 @@ void Engine::initMMTexts(Text& GameName, Text& Author,
 void Engine::start()
 {
 	// Таймеры
-	Clock clock, cooldown, GameTime;
+	Clock clock, GameTime;
 	int GameTimeInSec = 0;
 	restart = false;
 	// Запускаем главное меню
@@ -135,7 +135,7 @@ void Engine::start()
 	// Начальный зум камеры
 	Cam.setSize(512, 512);
 	// Работа игры
-	GameGoing(GameTimeInSec, GameTime, clock, cooldown);
+	GameGoing(GameTimeInSec, GameTime, clock);
 	// Окно проигрыша
 	GameOver(GameTimeInSec);
 	// Закрытие окна
@@ -158,8 +158,7 @@ void Engine::input(float elapsedTime)
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
 		int x = (m_Character.getPos().x + 32) / 64, y = (m_Character.getPos().y + 32) / 64;
-		m_Character.setX(x * 64);
-		m_Character.setY(y * 64);
+		m_Character.setPos(x * 64, y * 64);
 	}
 	// Ускорение зума
 	if (Keyboard::isKeyPressed(Keyboard::LShift)) {
@@ -468,12 +467,54 @@ void Engine::randomMap() {
 	}
 }
 void Engine::battle() {
+	Sprite BattleBG;
+	Texture BBG;
+	BBG.loadFromFile("Textures/Background/BattleBackground.jpg");
+	BattleBG.setTexture(BBG);
+	BattleBG.setPosition(0, 0);
 	FloatRect Ch = m_Character.m_Sprite.getGlobalBounds(),
 		En = e_Enemy.getSprite().getGlobalBounds();
-	// Если игрок пересекается с врагом отнимать хп
-	if (Ch.intersects(En) and ready) {
-		m_Character.Health -= 1;
-		ready = 0;
+
+	if (Ch.intersects(En)) {
+		View Cam2;
+		Cam2.setSize(512, 512);
+		Cam2.setCenter(256, 256);
+		m_Character.BeforeBattlePos = m_Character.getPos();
+		e_Enemy.BeforeBattlePos = e_Enemy.getPos();
+		m_Character.BeforeBattleDir = m_Character.dir;
+		Clock Timer;
+
+		while (m_Character.Health > 0
+			and e_Enemy.Health > 0) {
+			m_Character.m_Sprite.setTextureRect(IntRect(32, 64, 32, 32));
+			m_Character.setPos(75, 350);
+			e_Enemy.setPos(375, 225);
+
+			m_Window.setView(Cam2);
+			float time = (float)Timer.getElapsedTime().asMicroseconds();
+			Timer.restart();
+			time = time / 800;
+			m_Window.clear(Color::White);
+
+			update(time);
+
+			m_Window.draw(BattleBG);
+			m_Window.draw(m_Character.m_Sprite);
+			m_Window.draw(e_Enemy.getSprite());
+			m_Window.display();
+			if (Keyboard::isKeyPressed(Keyboard::R)) {
+				switch (m_Character.BeforeBattleDir) {
+				case 0: m_Character.setPos(e_Enemy.BeforeBattlePos.x - 65, m_Character.BeforeBattlePos.y); break;
+				case 1: m_Character.setPos(e_Enemy.BeforeBattlePos.x + 65, m_Character.BeforeBattlePos.y); break;
+				case 2: m_Character.setPos(m_Character.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y - 65); break;
+				case 3: m_Character.setPos(m_Character.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y + 65); break;
+				}
+				//m_Character.setPos(m_Character.BeforeBattlePos.x, m_Character.BeforeBattlePos.y);
+				e_Enemy.setPos(e_Enemy.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y);
+				break;
+			}
+			while (Keyboard::isKeyPressed(Keyboard::R)) sleep(milliseconds(1));
+		}
 	}
 }
 
@@ -498,7 +539,7 @@ void Engine::GameOver(int& GameTimeInSec) {
 	MainMenuMusic.stop();
 }
 void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
-	Clock clock, Clock cooldown) {
+	Clock clock) {
 	GameMusic.play();
 	while (m_Window.isOpen() and m_Character.Health > 0)
 	{
@@ -506,14 +547,7 @@ void Engine::GameGoing(int& GameTimeInSec, Clock GameTime,
 		float time = (float)clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = time / 800;
-		if (!ready) {
-			if (cooldown.getElapsedTime().asSeconds() >= 0.5) {
-				ready = 1;
-				cooldown.restart();
-			}
-		}
-		else cooldown.restart();
-
+		float CEF = 0;
 		input(time);
 		update(time);
 		battle();

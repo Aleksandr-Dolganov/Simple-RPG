@@ -17,9 +17,10 @@ E:\C C++\SimpleRpg\engine.cpp(247,51): warning C4244: +=: преобразова
 E:\C C++\SimpleRpg\engine.cpp(268,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
 E:\C C++\SimpleRpg\engine.cpp(301,44): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
 E:\C C++\SimpleRpg\engine.cpp(364,15): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(505,54): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(497,33): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(533,54): warning C4244: =: преобразование "float" в "int", возможна потеря данных
   Создание кода
-  1 of 215 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
+  2 of 216 functions ( 0.9%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     2 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено

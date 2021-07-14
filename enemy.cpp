@@ -14,12 +14,20 @@ Enemy::Enemy() {
 	e_Sprite.setTextureRect(IntRect(0, 24, 16, 16));
 	// Начальная позиция врага
 	e_Position = Vector2f(0, 0);
+	BeforeBattlePos.x, BeforeBattlePos.y = 0;
 }
 Enemy::~Enemy() {
 	std::cout << std::endl << std::endl
 		<< "\t\tEnemy Destroyed" << std::endl << std::endl;
 }
 
+Vector2f Enemy::getPos() {
+	return e_Position;
+}
+void Enemy::setPos(float x, float y) {
+	e_Position.x = x;
+	e_Position.y = y;
+}
 Sprite Enemy::getSprite()
 {
 	return e_Sprite;
@@ -32,7 +40,6 @@ void Enemy::updateEn(float elapsedTime)
 	CurrentEframe += 0.009 * elapsedTime;
 	if (CurrentEframe > 5) CurrentEframe -= 5;
 	e_Sprite.setTextureRect(IntRect(16 * int(CurrentEframe), 24, 16, 16));
-
 }
 void Enemy::randPos() {
 	int x = (rand() % 30), y = (rand() % 30);

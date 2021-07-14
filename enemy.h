@@ -12,8 +12,11 @@ private:
 	Vector2f e_Position;// Позиция врага
 	Sprite e_Sprite;// Спрайт врага
 	Texture e_Texture;// Текстура врага
-	int Health;// Здоровье врага
 public:
+	int Health;// Здоровье врага
+	Vector2f BeforeBattlePos;
+	Vector2f getPos();
+	void setPos(float x, float y);
 	// Конструктор
 	Enemy();
 	// Деструктор
