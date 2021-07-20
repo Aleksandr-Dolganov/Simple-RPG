@@ -1,34 +1,26 @@
 ﻿  engine.cpp
-E:\C C++\SimpleRpg\engine.cpp(7,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(18,52): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(9,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(20,52): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
           with
           [
               T=float
           ]
-E:\C C++\SimpleRpg\engine.cpp(18,38): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(20,38): warning C4244: аргумент: преобразование "T" в "unsigned int", возможна потеря данных
           with
           [
               T=float
           ]
-E:\C C++\SimpleRpg\engine.cpp(51,39): warning C4305: аргумент: усечение из "double" в "float"
-E:\C C++\SimpleRpg\engine.cpp(160,9): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-E:\C C++\SimpleRpg\engine.cpp(160,49): warning C4244: инициализация: преобразование "T" в "int", возможна потеря данных
-          with
-          [
-              T=float
-          ]
-E:\C C++\SimpleRpg\engine.cpp(161,32): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(161,24): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(204,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(225,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(246,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(267,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(300,44): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(363,15): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(517,17): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(571,54): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(53,39): warning C4305: аргумент: усечение из "double" в "float"
+E:\C C++\SimpleRpg\engine.cpp(210,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(231,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(252,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(273,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(306,44): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(369,15): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(530,17): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(551,40): warning C4305: аргумент: усечение из "double" в "float"
+E:\C C++\SimpleRpg\engine.cpp(555,41): warning C4305: аргумент: усечение из "double" в "float"
+E:\C C++\SimpleRpg\engine.cpp(630,54): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+  main.cpp
+  Создание кода...
   SimpleRpg.vcxproj -> E:\C C++\SimpleRpg\x64\Debug\SimpleRpg.exe

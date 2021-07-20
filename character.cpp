@@ -50,7 +50,7 @@ void Character::randPos() {
 void Character::setSpeed(float speed) {
 	m_Speed = speed;
 }
-void Character::updateCh(float elapsedTime)
+void Character::updateCh(float elapsedTime, bool DebugOffCollision)
 {
 	// Движение персонажа
 	switch (dir)
@@ -66,7 +66,7 @@ void Character::updateCh(float elapsedTime)
 	m_Speed = 0;
 	m_Sprite.setPosition(m_Position);
 	// Проверка коллизии
-	collision();
+	if (!DebugOffCollision) collision();
 }
 
 void Character::collision() {

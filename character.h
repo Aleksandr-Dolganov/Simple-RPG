@@ -24,9 +24,8 @@ public:
 	Vector2f getPos();// Функция передачи координат персонажа в основной класс (engine)
 	Vector2f BeforeBattlePos;
 	void setPos(float x, float y);// Установка координат для персонажа
-	//void setX(float);// Установка координаты X для персонажа
 	void setSpeed(float);// Установка скорости персонажа
 
-	void updateCh(float elapsedTime);// Функция обновления персонажа (изменение кадров анимации и позиции персонажа)
+	void updateCh(float elapsedTime, bool DebugOffCollision);// Функция обновления персонажа (изменение кадров анимации и позиции персонажа)
 	void randPos();// Случайная позиция персонажа
 };

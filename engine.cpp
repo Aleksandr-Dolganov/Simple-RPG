@@ -3,6 +3,8 @@
 
 Engine::Engine()
 {
+	DebugOffCollision = false;
+	KilledBats = 0;
 	// Рандомим карту и положение персонажа/врага
 	srand(time(0));
 	randomMap();
@@ -79,16 +81,19 @@ void Engine::initTexts() {
 	GameTimeOver.setFont(font);
 	CloseWindow.setFont(font);
 	CloseWindow2.setFont(font);
+	KilledBatsText.setFont(font);
 	HealthText.setCharacterSize(30);
 	GameTimeOver.setCharacterSize(70);
 	CloseWindow.setCharacterSize(75);
 	CloseWindow2.setCharacterSize(75);
+	KilledBatsText.setCharacterSize(70);
 	HealthText.setFillColor(Color::Red);
 	GameTimeOver.setFillColor(Color::White);
 	CloseWindow.setFillColor(Color::White);
 	CloseWindow.setString("Press \"Space\" to close game.");
 	CloseWindow2.setFillColor(Color::White);
 	CloseWindow2.setString("Press \"R\" to restart game.");
+	KilledBatsText.setFillColor(Color::White);
 	GAMEOVER.setFont(font);
 	GAMEOVER.setCharacterSize(100);
 	GAMEOVER.setFillColor(Color::White);
@@ -154,15 +159,16 @@ void Engine::input(float elapsedTime)
 		GAMEOVER.setPosition(256, 0);
 	}
 #if (_DEBUG)
-	// Тестовый телепорт в середину клетки
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
-		int x = (m_Character.getPos().x + 32) / 64, y = (m_Character.getPos().y + 32) / 64;
-		m_Character.setPos(x * 64, y * 64);
+		DebugOffCollision = true;
+	}
+	else {
+		DebugOffCollision = false;
 	}
 	// Ускорение зума
 	if (Keyboard::isKeyPressed(Keyboard::LShift)) {
-		zoomSpeed = 5;
+		zoomSpeed = 6;
 	}
 	else {
 		zoomSpeed = 1;
@@ -277,7 +283,7 @@ void Engine::input(float elapsedTime)
 void Engine::update(float dtAsSeconds)
 {
 	// Обновление персонажа и врага
-	m_Character.updateCh(dtAsSeconds);
+	m_Character.updateCh(dtAsSeconds, DebugOffCollision);
 	e_Enemy.updateEn(dtAsSeconds);
 }
 void Engine::drawMap(float elapsedTime)
@@ -482,13 +488,18 @@ void Engine::battle() {
 		m_Character.BeforeBattlePos = m_Character.getPos();
 		e_Enemy.BeforeBattlePos = e_Enemy.getPos();
 		m_Character.BeforeBattleDir = m_Character.dir;
-		Clock Timer;
+		Clock Timer, Cooldown;
 
 		while (m_Character.Health > 0
 			and e_Enemy.Health > 0) {
 			m_Character.m_Sprite.setTextureRect(IntRect(32, 64, 32, 32));
 			m_Character.setPos(75, 350);
 			e_Enemy.setPos(375, 225);
+
+			if (ready) Cooldown.restart();
+			else {
+				ready = Cooldown.getElapsedTime().asSeconds() >= 1 ? 1 : 0;
+			}
 
 			m_Window.setView(Cam2);
 			float time = (float)Timer.getElapsedTime().asMicroseconds();
@@ -502,10 +513,12 @@ void Engine::battle() {
 			PlayerHealth << m_Character.Health;
 			HealthText.setString(PlayerHealth.str() + " / 20");
 			if (m_Character.Health >= 10) {
-				HealthText.setPosition(Cam2.getCenter().x - 200, Cam2.getCenter().y + 200);
+				HealthText.setPosition(Cam2.getCenter().x - 200,
+					Cam2.getCenter().y + 200);
 			}
 			else {
-				HealthText.setPosition(Cam2.getCenter().x - 190, Cam2.getCenter().y + 200);
+				HealthText.setPosition(Cam2.getCenter().x - 190,
+					Cam2.getCenter().y + 200);
 			}
 			interface.Background.setPosition(Cam2.getCenter().x - 256,
 				Cam2.getCenter().y + 200);
@@ -517,9 +530,31 @@ void Engine::battle() {
 			tmp1 = 182.0 * (m_Character.Health / 20.0);
 			interface.HealthCur.setTextureRect(IntRect(0, 79,
 				tmp1, 5));
+
+			std::ostringstream EnemyHealth;
+			Text EnemyHealthText;
+			EnemyHealthText.setFont(font);
+			EnemyHealthText.setCharacterSize(30);
+			EnemyHealthText.setFillColor(Color::Red);
+			EnemyHealth << e_Enemy.Health;
+			EnemyHealthText.setString(EnemyHealth.str() + " / 20");
+			if (m_Character.Health >= 10) {
+				EnemyHealthText.setPosition(Cam2.getCenter().x + 110,
+					Cam2.getCenter().y - 100);
+			}
+			else {
+				EnemyHealthText.setPosition(Cam2.getCenter().x + 100,
+					Cam2.getCenter().y - 100);
+			}
 			m_Window.draw(BattleBG);
 			m_Window.draw(interface.Background);
+			interface.Background.setScale(0.6, 2);
+			interface.Background.setPosition(Cam2.getCenter().x + 90,
+				Cam2.getCenter().y - 100);
+			m_Window.draw(interface.Background);
+			interface.Background.setScale(0.98, 3);
 			m_Window.draw(HealthText);
+			m_Window.draw(EnemyHealthText);
 			m_Window.draw(interface.Health);
 			m_Window.draw(interface.HealthCur);
 			m_Window.draw(m_Character.m_Sprite);
@@ -527,19 +562,39 @@ void Engine::battle() {
 			m_Window.display();
 			if (Keyboard::isKeyPressed(Keyboard::R)) {
 				int tmp = rand() % 101;
-				if (tmp >= 50) m_Character.Health -= rand() % 4;
+				if (tmp <= 75) m_Character.Health -= 1 + (rand() % 3);
 				switch (m_Character.BeforeBattleDir) {
 				case 0: m_Character.setPos(e_Enemy.BeforeBattlePos.x - 65, m_Character.BeforeBattlePos.y); break;
 				case 1: m_Character.setPos(e_Enemy.BeforeBattlePos.x + 65, m_Character.BeforeBattlePos.y); break;
 				case 2: m_Character.setPos(m_Character.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y - 65); break;
 				case 3: m_Character.setPos(m_Character.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y + 65); break;
 				}
-				//m_Character.setPos(m_Character.BeforeBattlePos.x, m_Character.BeforeBattlePos.y);
 				e_Enemy.setPos(e_Enemy.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y);
 				while (Keyboard::isKeyPressed(Keyboard::R)) sleep(milliseconds(1));
 				break;
 			}
+			if (Keyboard::isKeyPressed(Keyboard::F) and ready) {
+				int tmp = rand() % 101;
+				if (tmp <= 75) {
+					e_Enemy.Health -= 3 + (rand() % 3);
+					ready = 0;
+				}
+			}
+			while (Keyboard::isKeyPressed(Keyboard::F) and e_Enemy.Health <= 0) sleep(milliseconds(1));
 		}
+	}
+	if (m_Character.Health > 0
+		and e_Enemy.Health <= 0) {
+		switch (m_Character.BeforeBattleDir) {
+		case 0: m_Character.setPos(e_Enemy.BeforeBattlePos.x - 65, m_Character.BeforeBattlePos.y); break;
+		case 1: m_Character.setPos(e_Enemy.BeforeBattlePos.x + 65, m_Character.BeforeBattlePos.y); break;
+		case 2: m_Character.setPos(m_Character.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y - 65); break;
+		case 3: m_Character.setPos(m_Character.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y + 65); break;
+		}
+		e_Enemy.randPos();
+		e_Enemy.Health = 20;
+		if (m_Character.Health < 20) m_Character.Health += 1;
+		KilledBats++;
 	}
 }
 
@@ -548,10 +603,14 @@ void Engine::GameOver(int& GameTimeInSec) {
 	while (!Keyboard::isKeyPressed(Keyboard::Space) and !restart) {
 		m_Window.clear(Color(237, 144, 121, 255));
 		m_Window.setView(View());
-		std::ostringstream GameTimeStr;
+		std::ostringstream GameTimeStr, KilledBatsStr;
 		GameTimeStr << GameTimeInSec;
+		KilledBatsStr << KilledBats;
 		GameTimeOver.setString("Time in game: " + GameTimeStr.str() + " seconds");
 		GameTimeOver.setPosition(160, 512);
+		KilledBatsText.setString("Killed Bats: " + KilledBatsStr.str());
+		KilledBatsText.setPosition(160, 612);
+		m_Window.draw(KilledBatsText);
 		m_Window.draw(GameTimeOver);
 		CloseWindow.setPosition(120, 900);
 		CloseWindow2.setPosition(120, 800);

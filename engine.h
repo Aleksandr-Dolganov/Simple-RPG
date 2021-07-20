@@ -29,6 +29,8 @@ private:
 	Text CloseWindow;// Подсказка закрытия игры
 	Text CloseWindow2;// Подсказка рестарта игры
 	Text GAMEOVER;// Заголовок окна проигрыша
+	int KilledBats;
+	Text KilledBatsText;
 	// Функция настройки тектов
 	void initTexts();
 	// Функция настройки текстов главного меню
@@ -74,6 +76,8 @@ private:
 	void GameMainMenu();
 
 	void GameControls();
+
+	bool DebugOffCollision;
 public:
 	// Конструктор
 	Engine();
