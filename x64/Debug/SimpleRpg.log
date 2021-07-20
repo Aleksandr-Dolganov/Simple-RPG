@@ -29,5 +29,6 @@ E:\C C++\SimpleRpg\engine.cpp(246,51): warning C4244: +=: преобразова
 E:\C C++\SimpleRpg\engine.cpp(267,51): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
 E:\C C++\SimpleRpg\engine.cpp(300,44): warning C4244: +=: преобразование "double" в "float", возможна потеря данных
 E:\C C++\SimpleRpg\engine.cpp(363,15): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-E:\C C++\SimpleRpg\engine.cpp(546,54): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(517,17): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+E:\C C++\SimpleRpg\engine.cpp(571,54): warning C4244: =: преобразование "float" в "int", возможна потеря данных
   SimpleRpg.vcxproj -> E:\C C++\SimpleRpg\x64\Debug\SimpleRpg.exe

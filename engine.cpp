@@ -498,11 +498,36 @@ void Engine::battle() {
 
 			update(time);
 
+			std::ostringstream PlayerHealth;
+			PlayerHealth << m_Character.Health;
+			HealthText.setString(PlayerHealth.str() + " / 20");
+			if (m_Character.Health >= 10) {
+				HealthText.setPosition(Cam2.getCenter().x - 200, Cam2.getCenter().y + 200);
+			}
+			else {
+				HealthText.setPosition(Cam2.getCenter().x - 190, Cam2.getCenter().y + 200);
+			}
+			interface.Background.setPosition(Cam2.getCenter().x - 256,
+				Cam2.getCenter().y + 200);
+			interface.Health.setPosition(Cam2.getCenter().x - 250,
+				Cam2.getCenter().y + 235);
+			interface.HealthCur.setPosition(Cam2.getCenter().x - 250,
+				Cam2.getCenter().y + 235);
+			int tmp1;
+			tmp1 = 182.0 * (m_Character.Health / 20.0);
+			interface.HealthCur.setTextureRect(IntRect(0, 79,
+				tmp1, 5));
 			m_Window.draw(BattleBG);
+			m_Window.draw(interface.Background);
+			m_Window.draw(HealthText);
+			m_Window.draw(interface.Health);
+			m_Window.draw(interface.HealthCur);
 			m_Window.draw(m_Character.m_Sprite);
 			m_Window.draw(e_Enemy.getSprite());
 			m_Window.display();
 			if (Keyboard::isKeyPressed(Keyboard::R)) {
+				int tmp = rand() % 101;
+				if (tmp >= 50) m_Character.Health -= rand() % 4;
 				switch (m_Character.BeforeBattleDir) {
 				case 0: m_Character.setPos(e_Enemy.BeforeBattlePos.x - 65, m_Character.BeforeBattlePos.y); break;
 				case 1: m_Character.setPos(e_Enemy.BeforeBattlePos.x + 65, m_Character.BeforeBattlePos.y); break;
@@ -511,9 +536,9 @@ void Engine::battle() {
 				}
 				//m_Character.setPos(m_Character.BeforeBattlePos.x, m_Character.BeforeBattlePos.y);
 				e_Enemy.setPos(e_Enemy.BeforeBattlePos.x, e_Enemy.BeforeBattlePos.y);
+				while (Keyboard::isKeyPressed(Keyboard::R)) sleep(milliseconds(1));
 				break;
 			}
-			while (Keyboard::isKeyPressed(Keyboard::R)) sleep(milliseconds(1));
 		}
 	}
 }
